@@ -1,7 +1,5 @@
 import type { FC } from 'react'
-const App: FC = () => (
-  <div>
-    <p>Hello World</p>
-  </div>
-)
+import Main from '@/app/components/main/main'
+import '@/assets/styles/main.css'
+const App: FC = () => <Main />
 export default App

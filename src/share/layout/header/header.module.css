@@ -1,0 +1,14 @@
+.accent {
+  color: var(--primary-color);
+}
+
+.h1-title {
+  margin: 0;
+  font-size: 24px;
+}
+
+.inner {
+  background-color: #fff;
+  padding: 0 20px;
+  border-radius: 0 0 8px 8px;
+}
