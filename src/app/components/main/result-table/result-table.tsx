@@ -63,7 +63,15 @@ const SearchResultsTable: FC = () => {
       title: 'Авторы',
       dataIndex: 'authors.author',
       key: 'authors.author',
-      render: (_: IAuthors, record: IEntry) => record.authors.author.map((author) => author['$']).join(', ') // Объединяем имена авторов в строку
+      render: (_: IAuthors, record: IEntry) => {
+        const authors = record?.authors?.author
+
+        if (Array.isArray(authors)) {
+          return authors.map((author) => author['$']).join(', ')
+        }
+
+        return ''
+      }
     },
     {
       title: 'Название публикации',
