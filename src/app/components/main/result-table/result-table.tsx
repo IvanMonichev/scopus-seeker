@@ -6,7 +6,7 @@ import styles from './result-table.module.css'
 import { parseSearchTerms } from '@/app/components/main/result-table/result-table.service'
 import { fetchScienceDirectData } from '@/services/scopus-api'
 import Link from 'antd/es/typography/Link'
-import { IEntry } from '@/types/search-results'
+import { IAuthors, IEntry } from '@/types/search-results'
 
 const SearchResultsTable: FC = () => {
   const { data, setData } = useData()
@@ -63,7 +63,7 @@ const SearchResultsTable: FC = () => {
       title: 'Авторы',
       dataIndex: 'authors.author',
       key: 'authors.author',
-      render: (authors) => authors?.map((author) => author['$']).join(', ') // Объединяем имена авторов в строку
+      render: (_: IAuthors, record: IEntry) => record.authors.author.map((author) => author['$']).join(', ') // Объединяем имена авторов в строку
     },
     {
       title: 'Название публикации',
