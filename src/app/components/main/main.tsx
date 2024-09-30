@@ -11,7 +11,7 @@ const Main: FC = () => (
     <Content>
       <Search />
     </Content>
-    <Layout.Footer>Footer</Layout.Footer>
+    {/*<Layout.Footer>Footer</Layout.Footer>*/}
   </Layout>
 )
 
