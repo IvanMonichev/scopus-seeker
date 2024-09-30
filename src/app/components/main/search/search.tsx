@@ -1,20 +1,20 @@
 import { FC, useState } from 'react'
 import { Button, Flex, Form, Typography } from 'antd'
 import { useForm } from 'antd/es/form/Form'
-import { ISearchResults } from '@/types/search-form'
 import Input from 'antd/es/input/Input'
 import { SearchFormName } from '@/constants/search-form'
 
 import styles from './search.module.css'
-import { IResponseDirectData } from '@/types/response-direct-data'
 import { fetchScienceDirectData } from '@/services/scopus-api'
 import { SearchOutlined } from '@ant-design/icons'
+import { ISearchForm } from '@/types/search-form'
+import { useData } from '@/hooks/use-data'
 
 const Search: FC = () => {
-  const [data, setData] = useState<IResponseDirectData | null>(null)
+  const { setData } = useData()
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
-  const [form] = useForm<ISearchResults>()
+  const [form] = useForm<ISearchForm>()
 
   const handleSearchFinish = async () => {
     const search = form.getFieldValue(SearchFormName.Query)
@@ -44,12 +44,6 @@ const Search: FC = () => {
           </Flex>
         </Form.Item>
       </Form>
-      {data && (
-        <div>
-          <h2 className={styles['title']}>Результаты поиска</h2>
-          <Typography.Text code={true}>{JSON.stringify(data, null, 2)}</Typography.Text>
-        </div>
-      )}
       {error && (
         <div>
           <h2>ScienceDirect Search Error</h2>
