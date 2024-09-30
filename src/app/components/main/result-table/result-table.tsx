@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Table, Pagination } from 'antd'
 import { IEntry } from '@/types/search-results'
 import { useData } from '@/hooks/use-data'
@@ -6,10 +6,29 @@ import { useData } from '@/hooks/use-data'
 import styles from './result-table.module.css'
 import { parseSearchTerms } from '@/app/components/main/result-table/result-table.service'
 
+const HEADER_HEIGHT = 50 // Пример высоты заголовка в пикселях
+const PADDING = 20 // Пример отступов, которые нужно учест
+
 const SearchResultsTable: FC = () => {
   const { data } = useData()
+  const [tableHeight, setTableHeight] = useState(window.innerHeight - HEADER_HEIGHT - PADDING)
 
   const [currentPage, setCurrentPage] = useState(1)
+
+  useEffect(() => {
+    // Функция для обновления высоты таблицы
+    const updateTableHeight = () => {
+      setTableHeight(window.innerHeight - HEADER_HEIGHT - PADDING)
+    }
+
+    // Обновление высоты при изменении размера окна
+    window.addEventListener('resize', updateTableHeight)
+
+    // Удаляем слушателя при размонтировании компонента
+    return () => {
+      window.removeEventListener('resize', updateTableHeight)
+    }
+  }, [])
 
   if (!data) {
     return undefined
@@ -70,18 +89,20 @@ const SearchResultsTable: FC = () => {
           <span className={styles['accent']}>Поисковые слова</span>: {searchTerms}
         </p>
       </div>
-      <Table
-        dataSource={currentEntries}
-        columns={columns}
-        pagination={false} // Отключаем пагинацию таблицы
-        rowKey='dc:identifier' // Используйте уникальный идентификатор для строк
-      />
       <Pagination
+        className={styles['pagination']}
         current={currentPage}
         pageSize={itemsPerPage}
         total={totalItems}
         onChange={handlePageChange}
-        showSizeChanger={false} // Можно включить, если хотите дать возможность менять количество отображаемых элементов
+      />
+      <Table
+        className={styles['table']}
+        dataSource={currentEntries}
+        columns={columns}
+        pagination={false}
+        rowKey='dc:identifier' // Используйте уникальный идентификатор для строк
+        scroll={{ y: 500 }}
       />
     </>
   )

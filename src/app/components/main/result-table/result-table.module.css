@@ -19,3 +19,13 @@
 .info {
   margin: 0 0 12px;
 }
+
+.pagination {
+  margin: 0 0 12px;
+  justify-content: center;
+}
+
+.table {
+  border-radius: var(--border-radius);
+  height: 100%;
+}
