@@ -1,67 +1,84 @@
-import { FC, useEffect, useState } from 'react'
-import { Table, Pagination } from 'antd'
-import { IEntry } from '@/types/search-results'
+import { FC, useState } from 'react'
+import { Table, Pagination, Tag } from 'antd'
 import { useData } from '@/hooks/use-data'
 
 import styles from './result-table.module.css'
 import { parseSearchTerms } from '@/app/components/main/result-table/result-table.service'
-
-const HEADER_HEIGHT = 50 // Пример высоты заголовка в пикселях
-const PADDING = 20 // Пример отступов, которые нужно учест
+import { fetchScienceDirectData } from '@/services/scopus-api'
+import Link from 'antd/es/typography/Link'
+import { IEntry } from '@/types/search-results'
 
 const SearchResultsTable: FC = () => {
-  const { data } = useData()
-  const [tableHeight, setTableHeight] = useState(window.innerHeight - HEADER_HEIGHT - PADDING)
-
-  const [currentPage, setCurrentPage] = useState(1)
-
-  useEffect(() => {
-    // Функция для обновления высоты таблицы
-    const updateTableHeight = () => {
-      setTableHeight(window.innerHeight - HEADER_HEIGHT - PADDING)
-    }
-
-    // Обновление высоты при изменении размера окна
-    window.addEventListener('resize', updateTableHeight)
-
-    // Удаляем слушателя при размонтировании компонента
-    return () => {
-      window.removeEventListener('resize', updateTableHeight)
-    }
-  }, [])
+  const { data, setData } = useData()
+  const [loading, setLoading] = useState<boolean>(false)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [pageSize, setPageSize] = useState<number>(10)
 
   if (!data) {
     return undefined
   }
 
   const results = data['search-results']
-  const itemsPerPage = parseInt(results['opensearch:itemsPerPage'], 10)
   const totalItems = parseInt(results['opensearch:totalResults'], 10)
 
-  console.log(results)
+  const fetchData = async (page: number, pageSize: number) => {
+    setLoading(true)
+    try {
+      const query = results['opensearch:Query']['@searchTerms']
+      const result = await fetchScienceDirectData(query, page, pageSize)
+      setData(result)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = async (page: number, pageSize: number) => {
     setCurrentPage(page)
+    setPageSize(pageSize)
+    await fetchData(page, pageSize)
   }
 
   // Определяем данные для отображения на текущей странице
-  const currentEntries: IEntry[] = results.entry.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
 
   const columns = [
     {
-      title: 'Title',
+      title: 'Доступ',
+      dataIndex: 'openaccess',
+      key: 'openaccess',
+      render: (text: boolean) => (text ? <Tag color='green'>Октрыто</Tag> : <Tag color='red'>Закрыто</Tag>) // Изменено на русский
+    },
+    {
+      title: 'Название статьи',
       dataIndex: 'dc:title',
-      key: 'dc:title'
+      key: 'dc:title',
+      render: (title: string, record: IEntry) => (
+        <Link target='_blank' href={record.link[1]['@href']}>
+          {title}
+        </Link>
+      )
     },
     {
-      title: 'Creator',
-      dataIndex: 'dc:creator',
-      key: 'dc:creator'
+      title: 'Авторы',
+      dataIndex: 'authors.author',
+      key: 'authors.author',
+      render: (authors) => authors?.map((author) => author['$']).join(', ') // Объединяем имена авторов в строку
     },
     {
-      title: 'Publication Name',
+      title: 'Название публикации',
       dataIndex: 'prism:publicationName',
       key: 'prism:publicationName'
+    },
+    {
+      title: 'Том',
+      dataIndex: 'prism:volume',
+      key: 'prism:volume'
+    },
+    {
+      title: 'Дата выпуска',
+      dataIndex: 'prism:coverDate',
+      key: 'prism:coverDate'
     },
     {
       title: 'DOI',
@@ -69,10 +86,9 @@ const SearchResultsTable: FC = () => {
       key: 'prism:doi'
     },
     {
-      title: 'Open Access',
-      dataIndex: 'openaccess',
-      key: 'openaccess',
-      render: (text: boolean) => (text ? 'Yes' : 'No')
+      title: 'PII',
+      dataIndex: 'pii',
+      key: 'pii'
     }
   ]
 
@@ -92,17 +108,23 @@ const SearchResultsTable: FC = () => {
       <Pagination
         className={styles['pagination']}
         current={currentPage}
-        pageSize={itemsPerPage}
+        pageSize={pageSize}
         total={totalItems}
         onChange={handlePageChange}
+        showQuickJumper={true}
+        hideOnSinglePage={true}
+        size='small'
+        disabled={loading}
       />
       <Table
         className={styles['table']}
-        dataSource={currentEntries}
+        dataSource={results.entry}
         columns={columns}
         pagination={false}
         rowKey='dc:identifier' // Используйте уникальный идентификатор для строк
         scroll={{ y: 500 }}
+        loading={loading}
+        sticky={true} // Фиксируем первый столбец
       />
     </>
   )
