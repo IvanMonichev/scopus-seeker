@@ -24,12 +24,7 @@
     yarn install
     ```
 
-3. Create a `.env` file in the root directory of the project and add your Scopus API key:
-    ```
-    SCOPUS_API_KEY=your_scopus_api_key
-    ```
-
-4. To start the project, use the following command:
+3. To start the project, use the following command:
    ```bash
    npm start
    ```
