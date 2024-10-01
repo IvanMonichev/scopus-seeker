@@ -10,7 +10,10 @@ const Header: FC = () => (
         <span className={styles['accent']}>Scopus</span> Seeker
       </h1>
       <Typography.Text>
-        ИТМО, ФПИиКТ, Веб-технологии, <span className={styles['accent']}>Иван Моничев</span>
+        ИТМО, ФПИиКТ, Веб-технологии,{' '}
+        <Typography.Link target='_blank' href='https://isu.ifmo.ru/person/466757' className={styles['accent']}>
+          Иван Моничев
+        </Typography.Link>
       </Typography.Text>
     </Flex>
   </Layout.Header>
