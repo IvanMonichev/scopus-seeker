@@ -16,6 +16,9 @@ export const designTokens: ThemeConfig = {
     Button: {
       contentFontSize: 18,
       paddingBlock: 18
+    },
+    Typography: {
+      colorLink: '#0c7dbb'
     }
   }
 }

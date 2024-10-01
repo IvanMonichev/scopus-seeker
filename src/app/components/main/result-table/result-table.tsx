@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Table, Pagination, Tag } from 'antd'
 import { useData } from '@/hooks/use-data'
 
@@ -13,6 +13,12 @@ const SearchResultsTable: FC = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
+
+  useEffect(() => {
+    if (data) {
+      setPageSize(Number(data['search-results']['opensearch:itemsPerPage']))
+    }
+  }, [data])
 
   if (!data) {
     return undefined
@@ -130,9 +136,8 @@ const SearchResultsTable: FC = () => {
         columns={columns}
         pagination={false}
         rowKey='dc:identifier' // Используйте уникальный идентификатор для строк
-        scroll={{ y: 500 }}
         loading={loading}
-        sticky={true} // Фиксируем первый столбец
+        sticky={true}
       />
     </>
   )
