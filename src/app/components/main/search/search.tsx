@@ -1,5 +1,5 @@
 import { FC, useState } from 'react'
-import { Button, Flex, Form, Typography } from 'antd'
+import { Button, DatePicker, Flex, Form, Typography } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import Input from 'antd/es/input/Input'
 import { SearchFormName } from '@/constants/search-form'
@@ -17,11 +17,15 @@ const Search: FC = () => {
   const [form] = useForm<ISearchForm>()
 
   const handleSearchFinish = async () => {
-    const search = form.getFieldValue(SearchFormName.Query)
+    const fields = form.getFieldsValue()
+    const { query, dateRange } = fields
 
+    // Format the date range for the search API
+    const formattedDateRange = dateRange ? `${dateRange[0].format('YYYY')}-${dateRange[1].format('YYYY')}` : undefined
+    console.log(formattedDateRange)
     try {
       setLoading(true)
-      const result = await fetchScienceDirectData(search)
+      const result = await fetchScienceDirectData(query, formattedDateRange)
       console.log(result)
       setData(result)
     } catch (err: any) {
@@ -42,6 +46,9 @@ const Search: FC = () => {
               Найти
             </Button>
           </Flex>
+        </Form.Item>
+        <Form.Item name={SearchFormName.DateRange} label='Диапазон дат'>
+          <DatePicker.RangePicker picker='year' />
         </Form.Item>
       </Form>
       {error && (
