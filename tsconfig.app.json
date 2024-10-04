@@ -24,5 +24,9 @@
       "@/*": ["*"]
     }
   },
-  "include": ["src", "eslint.config.js"]
+  "include": [
+    "src",
+    "eslint.config.js",
+    "vite-env.d.ts"
+  ]
 }

@@ -1,8 +1,8 @@
 import { FC, useState } from 'react'
-import { Button, Flex, Form, Typography } from 'antd'
+import { Button, DatePicker, Flex, Form, Typography } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import Input from 'antd/es/input/Input'
-import { SearchFormName } from '@/constants/search-form'
+import { SearchFormLabel, SearchFormName } from '@/constants/search-form'
 
 import styles from './search.module.css'
 import { fetchScienceDirectData } from '@/services/scopus-api'
@@ -17,11 +17,13 @@ const Search: FC = () => {
   const [form] = useForm<ISearchForm>()
 
   const handleSearchFinish = async () => {
-    const search = form.getFieldValue(SearchFormName.Query)
+    const fields = form.getFieldsValue()
+    const { query, dateRange } = fields
 
+    const formattedDateRange = dateRange ? `${dateRange[0].format('YYYY')}-${dateRange[1].format('YYYY')}` : undefined
     try {
       setLoading(true)
-      const result = await fetchScienceDirectData(search)
+      const result = await fetchScienceDirectData(query, formattedDateRange)
       console.log(result)
       setData(result)
     } catch (err: any) {
@@ -35,13 +37,21 @@ const Search: FC = () => {
   return (
     <div className={styles['container']}>
       <Form form={form} layout='vertical' onFinish={handleSearchFinish} disabled={loading}>
-        <Form.Item name={SearchFormName.Query}>
+        <Form.Item name={SearchFormName.Query} className={styles['form-item']}>
           <Flex gap={5} align='center'>
             <Input placeholder={'Введите данные для запроса'} />
             <Button type='primary' icon={<SearchOutlined />} htmlType='submit' loading={loading}>
               Найти
             </Button>
           </Flex>
+        </Form.Item>
+        <Form.Item
+          name={SearchFormName.DateRange}
+          label={SearchFormLabel.DateRange}
+          layout='horizontal'
+          className={styles['form-item']}
+        >
+          <DatePicker.RangePicker picker='year' size='small' />
         </Form.Item>
       </Form>
       {error && (
