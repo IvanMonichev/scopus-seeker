@@ -27,6 +27,6 @@
 
 .table {
   border-radius: var(--border-radius);
-  height: 72%;
+  height: 67%;
   overflow: auto;
 }

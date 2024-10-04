@@ -15,7 +15,6 @@ const Main: FC = () => (
       <Search />
       <SearchResultsTable />
     </Content>
-    {/*<Layout.Footer>Footer</Layout.Footer>*/}
   </Layout>
 )
 

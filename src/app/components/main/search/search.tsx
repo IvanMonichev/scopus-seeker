@@ -37,7 +37,7 @@ const Search: FC = () => {
   return (
     <div className={styles['container']}>
       <Form form={form} layout='vertical' onFinish={handleSearchFinish} disabled={loading}>
-        <Form.Item name={SearchFormName.Query}>
+        <Form.Item name={SearchFormName.Query} className={styles['form-item']}>
           <Flex gap={5} align='center'>
             <Input placeholder={'Введите данные для запроса'} />
             <Button type='primary' icon={<SearchOutlined />} htmlType='submit' loading={loading}>
@@ -45,7 +45,12 @@ const Search: FC = () => {
             </Button>
           </Flex>
         </Form.Item>
-        <Form.Item name={SearchFormName.DateRange} label={SearchFormLabel.DateRange} layout='horizontal'>
+        <Form.Item
+          name={SearchFormName.DateRange}
+          label={SearchFormLabel.DateRange}
+          layout='horizontal'
+          className={styles['form-item']}
+        >
           <DatePicker.RangePicker picker='year' size='small' />
         </Form.Item>
       </Form>
