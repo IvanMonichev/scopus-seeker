@@ -5,5 +5,5 @@ export const SearchFormName = {
 
 export const SearchFormLabel = {
   Query: 'Данные для запроса',
-  DateRange: 'Диапазон дат'
+  DateRange: 'Годы публикации'
 } as const

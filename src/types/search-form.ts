@@ -1,4 +1,6 @@
+import type { Dayjs } from 'dayjs'
+
 export interface ISearchForm {
   query: string
-  dateRange: string
+  dateRange: Dayjs[]
 }
