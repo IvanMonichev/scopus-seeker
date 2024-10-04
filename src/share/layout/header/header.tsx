@@ -14,6 +14,7 @@ const Header: FC = () => (
         <Typography.Link target='_blank' href='https://isu.ifmo.ru/person/466757' className={styles['accent']}>
           Иван Моничев
         </Typography.Link>
+        <Typography.Text>{__APP_VERSION__}</Typography.Text>
       </Typography.Text>
     </Flex>
   </Layout.Header>

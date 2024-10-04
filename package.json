@@ -1,13 +1,14 @@
 {
   "name": "scopus-seeker",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "update": "npm version patch"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
