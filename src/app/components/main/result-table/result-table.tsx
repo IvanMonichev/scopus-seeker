@@ -53,7 +53,13 @@ const SearchResultsTable: FC = () => {
       title: 'Доступ',
       dataIndex: 'openaccess',
       key: 'openaccess',
-      render: (text: boolean) => (text ? <Tag color='green'>Октрыто</Tag> : <Tag color='red'>Закрыто</Tag>) // Изменено на русский
+      render: (text: boolean) => (text ? <Tag color='green'>Открыто</Tag> : <Tag color='red'>Закрыто</Tag>),
+      sorter: (a: IEntry, b: IEntry) => Number(a.openaccess) - Number(b.openaccess),
+      filters: [
+        { text: 'Открыто', value: true },
+        { text: 'Закрыто', value: false }
+      ],
+      onFilter: (value: boolean | string | number, record: IEntry) => record.openaccess === value
     },
     {
       title: 'Название статьи',
@@ -63,7 +69,8 @@ const SearchResultsTable: FC = () => {
         <Link target='_blank' href={record.link[1]['@href']}>
           {title}
         </Link>
-      )
+      ),
+      sorter: (a: IEntry, b: IEntry) => a['dc:title'].localeCompare(b['dc:title'])
     },
     {
       title: 'Авторы',
@@ -92,7 +99,9 @@ const SearchResultsTable: FC = () => {
     {
       title: 'Дата выпуска',
       dataIndex: 'prism:coverDate',
-      key: 'prism:coverDate'
+      key: 'prism:coverDate',
+      sorter: (a: IEntry, b: IEntry) =>
+        new Date(a['prism:coverDate']).getTime() - new Date(b['prism:coverDate']).getTime()
     },
     {
       title: 'DOI',
@@ -138,6 +147,7 @@ const SearchResultsTable: FC = () => {
         rowKey='dc:identifier' // Используйте уникальный идентификатор для строк
         loading={loading}
         sticky={true}
+        showSorterTooltip={{ target: 'sorter-icon' }}
       />
     </>
   )
