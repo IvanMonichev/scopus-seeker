@@ -1,5 +1,5 @@
-import { FC, useEffect, useState } from 'react'
-import { Table, Pagination, Tag } from 'antd'
+import { FC, Key, useEffect, useState } from 'react'
+import { Table, Pagination, Tag, TableProps } from 'antd'
 import { useData } from '@/hooks/use-data'
 
 import styles from './result-table.module.css'
@@ -7,6 +7,10 @@ import { parseSearchTerms } from '@/app/components/main/result-table/result-tabl
 import { fetchScienceDirectData } from '@/services/scopus-api'
 import Link from 'antd/es/typography/Link'
 import { IAuthors, IEntry } from '@/types/search-results'
+
+interface DataType extends IEntry {
+  key: string
+}
 
 const SearchResultsTable: FC = () => {
   const { data, setData } = useData()
@@ -46,20 +50,18 @@ const SearchResultsTable: FC = () => {
     await fetchData(page, pageSize)
   }
 
-  // Определяем данные для отображения на текущей странице
-
-  const columns = [
+  const columns: TableProps<DataType>['columns'] = [
     {
       title: 'Доступ',
       dataIndex: 'openaccess',
       key: 'openaccess',
-      render: (text: boolean) => (text ? <Tag color='green'>Открыто</Tag> : <Tag color='red'>Закрыто</Tag>),
+      render: (openaccess: boolean) => (openaccess ? <Tag color='green'>Открыто</Tag> : <Tag color='red'>Закрыто</Tag>),
       sorter: (a: IEntry, b: IEntry) => Number(a.openaccess) - Number(b.openaccess),
       filters: [
         { text: 'Открыто', value: true },
         { text: 'Закрыто', value: false }
       ],
-      onFilter: (value: boolean | string | number, record: IEntry) => record.openaccess === value
+      onFilter: (value: boolean | Key, record: DataType) => value === record['openaccess']
     },
     {
       title: 'Название статьи',
@@ -117,6 +119,8 @@ const SearchResultsTable: FC = () => {
 
   const searchTerms = parseSearchTerms(results['opensearch:Query']['@searchTerms'])
 
+  const tableData = results.entry.map<DataType>((item, index) => ({ ...item, key: index.toString() }))
+
   return (
     <>
       <div className={styles['info']}>
@@ -141,7 +145,7 @@ const SearchResultsTable: FC = () => {
       />
       <Table
         className={styles['table']}
-        dataSource={results.entry}
+        dataSource={tableData}
         columns={columns}
         pagination={false}
         rowKey='dc:identifier' // Используйте уникальный идентификатор для строк
