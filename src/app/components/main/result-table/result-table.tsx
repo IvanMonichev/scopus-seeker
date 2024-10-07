@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, Key, useEffect, useState } from 'react'
 import { Table, Pagination, Tag, TableProps } from 'antd'
 import { useData } from '@/hooks/use-data'
 
@@ -61,7 +61,7 @@ const SearchResultsTable: FC = () => {
         { text: 'Открыто', value: true },
         { text: 'Закрыто', value: false }
       ],
-      onFilter: (value: boolean, record: IEntry) => value === record['openaccess']
+      onFilter: (value: boolean | Key, record: DataType) => value === record['openaccess']
     },
     {
       title: 'Название статьи',
