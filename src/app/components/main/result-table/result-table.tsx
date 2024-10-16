@@ -17,6 +17,22 @@ const SearchResultsTable: FC = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [pageSize, setPageSize] = useState<number>(10)
+  const [horizontalScroll, setHorizontalScroll] = useState<number | string>('auto')
+  const [width, setWidth] = useState(window.innerWidth)
+
+  console.log(width)
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  useEffect(() => {
+    if (width < 1550) {
+      setHorizontalScroll(1550)
+    }
+  }, [width])
 
   useEffect(() => {
     if (data) {
@@ -148,10 +164,11 @@ const SearchResultsTable: FC = () => {
         dataSource={tableData}
         columns={columns}
         pagination={false}
-        rowKey='dc:identifier' // Используйте уникальный идентификатор для строк
+        rowKey='dc:identifier'
         loading={loading}
         sticky={true}
         showSorterTooltip={{ target: 'sorter-icon' }}
+        scroll={{ x: horizontalScroll }}
       />
     </>
   )

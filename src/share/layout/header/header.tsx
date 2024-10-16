@@ -9,12 +9,12 @@ const Header: FC = () => (
       <h1 className={styles['h1-title']}>
         <span className={styles['accent']}>Scopus</span> Seeker
       </h1>
-      <Typography.Text>
-        <Typography.Text code={true}>{__APP_VERSION__}</Typography.Text>
+      <Typography.Text className={styles['code']} code={true}>
+        {__APP_VERSION__}
       </Typography.Text>
     </Flex>
-    <Typography.Text>
-      ИТМО, ФПИиКТ, Веб-технологии,{' '}
+    <Typography.Text className={styles['description']}>
+      <span className={styles['description-info']}>ИТМО, ФПИиКТ, Веб-технологии, </span>
       <Typography.Link target='_blank' href='https://isu.ifmo.ru/person/466757' className={styles['accent']}>
         Иван Моничев
       </Typography.Link>
