@@ -27,6 +27,19 @@
 
 .table {
   border-radius: var(--border-radius);
-  height: 67%;
   overflow: auto;
+  height: calc(100vh - 280px);
+}
+
+@media screen and (max-width: 767px) {
+  .title {
+    font-size: 14px;
+    line-height: 1.2;
+    margin: 0;
+  }
+  
+  .p-description {
+    font-size: 14px;
+    line-height: 1.2;
+  }
 }

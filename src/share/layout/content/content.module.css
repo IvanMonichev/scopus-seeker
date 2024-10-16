@@ -6,3 +6,10 @@
   height: calc(100% - 84px);
   overflow: hidden;
 }
+
+@media screen and (max-width: 1366px){
+  .content {
+    padding: 0;
+    width: calc(100% - 50px);
+  }
+}
