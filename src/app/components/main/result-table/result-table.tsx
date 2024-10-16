@@ -35,7 +35,7 @@ const SearchResultsTable: FC = () => {
     setLoading(true)
     try {
       const query = results['opensearch:Query']['@searchTerms']
-      const result = await fetchScienceDirectData(query, page.toString(), pageSize)
+      const result = await fetchScienceDirectData(query, page, pageSize)
       setData(result)
     } catch (error) {
       console.error(error)

@@ -1,8 +1,8 @@
 import { FC, useState } from 'react'
-import { Button, DatePicker, Flex, Form, Typography } from 'antd'
+import { Button, Flex, Form, Typography } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import Input from 'antd/es/input/Input'
-import { SearchFormLabel, SearchFormName } from '@/constants/search-form'
+import { SearchFormName } from '@/constants/search-form'
 
 import styles from './search.module.css'
 import { fetchScienceDirectData } from '@/services/scopus-api'
@@ -18,12 +18,12 @@ const Search: FC = () => {
 
   const handleSearchFinish = async () => {
     const fields = form.getFieldsValue()
-    const { query, dateRange } = fields
+    const { query } = fields
 
-    const formattedDateRange = dateRange ? `${dateRange[0].format('YYYY')}-${dateRange[1].format('YYYY')}` : undefined
+    // const formattedDateRange = dateRange ? `${dateRange[0].format('YYYY')}-${dateRange[1].format('YYYY')}` : undefined
     try {
       setLoading(true)
-      const result = await fetchScienceDirectData(query, formattedDateRange)
+      const result = await fetchScienceDirectData(query)
       console.log(result)
       setData(result)
     } catch (err: any) {
@@ -45,14 +45,14 @@ const Search: FC = () => {
             </Button>
           </Flex>
         </Form.Item>
-        <Form.Item
-          name={SearchFormName.DateRange}
-          label={SearchFormLabel.DateRange}
-          layout='horizontal'
-          className={styles['form-item']}
-        >
-          <DatePicker.RangePicker picker='year' size='small' />
-        </Form.Item>
+        {/*<Form.Item*/}
+        {/*  name={SearchFormName.DateRange}*/}
+        {/*  label={SearchFormLabel.DateRange}*/}
+        {/*  layout='horizontal'*/}
+        {/*  className={styles['form-item']}*/}
+        {/*>*/}
+        {/*  <DatePicker.RangePicker picker='year' size='small' />*/}
+        {/*</Form.Item>*/}
       </Form>
       {error && (
         <div>
