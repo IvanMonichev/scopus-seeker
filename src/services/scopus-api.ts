@@ -4,7 +4,6 @@ import { ISearchResult } from '@/types/search-results'
 
 export const fetchScienceDirectData = async (
   query: string,
-  date?: string,
   start: number = 0,
   count: number = 10
 ): Promise<ISearchResult> => {
@@ -14,7 +13,6 @@ export const fetchScienceDirectData = async (
         start,
         count,
         query,
-        date,
         apiKey: API_KEY,
         httpAccept: 'application/json'
       },
