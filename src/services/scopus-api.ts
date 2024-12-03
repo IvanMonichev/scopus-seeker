@@ -1,17 +1,17 @@
 import axios from 'axios'
-import { API_KEY, BASE_URL } from '@/constants/config'
+import { API_KEY, BASE_URL, PAGE_SIZE } from '@/constants/config'
 import { ISearchResult } from '@/types/search-results'
 
 export const fetchScienceDirectData = async (
   query: string,
-  start: number = 0,
-  count: number = 10
+  offset: number = 0,
+  pageSize: number = PAGE_SIZE
 ): Promise<ISearchResult> => {
   try {
     const response = await axios.get(BASE_URL, {
       params: {
-        start,
-        count,
+        start: offset,
+        count: pageSize,
         query,
         apiKey: API_KEY,
         httpAccept: 'application/json'

@@ -7,6 +7,7 @@ import { parseSearchTerms } from '@/app/components/main/result-table/result-tabl
 import { fetchScienceDirectData } from '@/services/scopus-api'
 import Link from 'antd/es/typography/Link'
 import { IAuthors, IEntry } from '@/types/search-results'
+import { PAGE_SIZE } from '@/constants/config'
 
 interface DataType extends IEntry {
   key: string
@@ -15,12 +16,10 @@ interface DataType extends IEntry {
 const SearchResultsTable: FC = () => {
   const { data, setData } = useData()
   const [loading, setLoading] = useState<boolean>(false)
+  const [pageSize, setPageSize] = useState(PAGE_SIZE)
   const [currentPage, setCurrentPage] = useState<number>(1)
-  const [pageSize, setPageSize] = useState<number>(10)
   const [horizontalScroll, setHorizontalScroll] = useState<number | string>('auto')
   const [width, setWidth] = useState(window.innerWidth)
-
-  console.log(width)
 
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth)
@@ -34,12 +33,6 @@ const SearchResultsTable: FC = () => {
     }
   }, [width])
 
-  useEffect(() => {
-    if (data) {
-      setPageSize(Number(data['search-results']['opensearch:itemsPerPage']))
-    }
-  }, [data])
-
   if (!data) {
     return undefined
   }
@@ -47,11 +40,11 @@ const SearchResultsTable: FC = () => {
   const results = data['search-results']
   const totalItems = parseInt(results['opensearch:totalResults'], 10)
 
-  const fetchData = async (page: number, pageSize: number) => {
+  const fetchData = async (offset: number, pageSize: number) => {
     setLoading(true)
     try {
       const query = results['opensearch:Query']['@searchTerms']
-      const result = await fetchScienceDirectData(query, page, pageSize)
+      const result = await fetchScienceDirectData(query, offset, pageSize)
       setData(result)
     } catch (error) {
       console.error(error)
@@ -63,7 +56,8 @@ const SearchResultsTable: FC = () => {
   const handlePageChange = async (page: number, pageSize: number) => {
     setCurrentPage(page)
     setPageSize(pageSize)
-    await fetchData(page, pageSize)
+    const offset = (page - 1) * pageSize
+    await fetchData(offset, pageSize)
   }
 
   const columns: TableProps<DataType>['columns'] = [
@@ -151,12 +145,11 @@ const SearchResultsTable: FC = () => {
       <Pagination
         className={styles['pagination']}
         current={currentPage}
-        pageSize={pageSize}
         total={totalItems}
+        pageSize={pageSize}
         onChange={handlePageChange}
         showQuickJumper={true}
         hideOnSinglePage={true}
-        size='small'
         disabled={loading}
       />
       <Table

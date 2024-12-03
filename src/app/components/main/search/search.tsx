@@ -24,7 +24,6 @@ const Search: FC = () => {
     try {
       setLoading(true)
       const result = await fetchScienceDirectData(query)
-      console.log(result)
       setData(result)
     } catch (err: any) {
       setError(err.message)
