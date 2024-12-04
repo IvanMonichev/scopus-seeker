@@ -15,7 +15,7 @@ const Header: FC = () => (
     </Flex>
     <Typography.Text className={styles['description']}>
       <span className={styles['description-info']}>ИТМО, ФПИиКТ, Веб-технологии, </span>
-      <Typography.Link target='_blank' href='https://isu.ifmo.ru/person/466757' className={styles['accent']}>
+      <Typography.Link target='_blank' href='https://vk.com/ivan_monichev' className={styles['accent']}>
         Иван Моничев
       </Typography.Link>
     </Typography.Text>
