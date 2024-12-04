@@ -43,3 +43,7 @@
     line-height: 1.2;
   }
 }
+
+.no-wrap-text {
+  text-wrap: nowrap;
+}
