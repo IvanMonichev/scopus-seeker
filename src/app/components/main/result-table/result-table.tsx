@@ -1,5 +1,5 @@
 import { FC, Key, useEffect, useState } from 'react'
-import { Table, Pagination, Tag, TableProps } from 'antd'
+import { Table, Pagination, Tag, TableProps, Typography } from 'antd'
 import { useData } from '@/hooks/use-data'
 
 import styles from './result-table.module.css'
@@ -8,6 +8,7 @@ import { fetchScienceDirectData } from '@/services/scopus-api'
 import Link from 'antd/es/typography/Link'
 import { IAuthors, IEntry } from '@/types/search-results'
 import { PAGE_SIZE } from '@/constants/config'
+import dayjs from 'dayjs'
 
 interface DataType extends IEntry {
   key: string
@@ -74,7 +75,7 @@ const SearchResultsTable: FC = () => {
       onFilter: (value: boolean | Key, record: DataType) => value === record['openaccess']
     },
     {
-      title: 'Название статьи',
+      title: 'Статья',
       dataIndex: 'dc:title',
       key: 'dc:title',
       render: (title: string, record: IEntry) => (
@@ -99,31 +100,47 @@ const SearchResultsTable: FC = () => {
       }
     },
     {
-      title: 'Название публикации',
+      title: 'Журнал',
       dataIndex: 'prism:publicationName',
       key: 'prism:publicationName'
     },
     {
       title: 'Том',
       dataIndex: 'prism:volume',
-      key: 'prism:volume'
+      key: 'prism:volume',
+      className: styles['no-wrap-text']
     },
     {
       title: 'Дата выпуска',
       dataIndex: 'prism:coverDate',
       key: 'prism:coverDate',
+      className: styles['no-wrap-text'],
+      ellipsis: true,
+      render: (value: string) => (
+        <Typography.Text className={styles['no-wrap-text']}>{dayjs(value).format('DD.MM.YYYY')}</Typography.Text>
+      ),
       sorter: (a: IEntry, b: IEntry) =>
         new Date(a['prism:coverDate']).getTime() - new Date(b['prism:coverDate']).getTime()
     },
     {
       title: 'DOI',
       dataIndex: 'prism:doi',
-      key: 'prism:doi'
+      key: 'prism:doi',
+      render: (value: string) => (
+        <Typography.Text className={styles['no-wrap-text']} copyable={true}>
+          {value}
+        </Typography.Text>
+      )
     },
     {
       title: 'PII',
       dataIndex: 'pii',
-      key: 'pii'
+      key: 'pii',
+      render: (value: string) => (
+        <Typography.Text className={styles['no-wrap-text']} copyable={true}>
+          {value}
+        </Typography.Text>
+      )
     }
   ]
 
